@@ -1,8 +1,9 @@
 const express = require("express");
 const app = express();
+app.set("view engine", "ejs");
 
 app.get("/", async (req, res) => {
-	res.status(303).send("Noe gikk gale");
+	res.render("index", { title: "index side", message: "hei", heading: "velkommen" });
 });
 
 const port = 3000;

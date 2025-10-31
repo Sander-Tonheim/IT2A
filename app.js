@@ -1,5 +1,9 @@
 const express = require("express");
 const app = express();
+const port = 3000;
+const mysql = require("mysql2/promise");
+const { createConnection } = require("./database/database.js");
+
 app.set("view engine", "ejs");
 
 app.get("/", async (req, res) => {

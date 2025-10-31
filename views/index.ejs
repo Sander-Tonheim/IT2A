@@ -8,7 +8,22 @@
 		<title><%- title %></title>
 	</head>
 	<body>
-		<%- heading %>
-		<p><%- message %></p>
+		<a href="/bruker">Til brukere!</a>
+		<h1>Hjemme</h1>
+		<div class="car-card">
+			<% cars.forEach(car => { %>
+			<div>
+				<ul>
+					<li><%= car.brand %></li>
+					<li><%= car.model %></li>
+					<li><%= car.fuel %></li>
+				</ul>
+				<img
+					src="/images/car.jpg"
+					alt="car"
+					class="car-image" />
+			</div>
+			<% }) %>
+		</div>
 	</body>
 </html>

@@ -24,7 +24,6 @@ app.get("/bruker", (req, res) => {
 	res.render("bruker", { names: ["per", "Ole", "Olesya", "Ådne"], fact: true, req: req.query });
 });
 
-const port = 3000;
 app.listen(port, () => {
 	console.log(`Example app listening on port ${port}`);
 });

@@ -7,7 +7,21 @@ const { createConnection } = require("./database/database.js");
 app.set("view engine", "ejs");
 
 app.get("/", async (req, res) => {
-	res.render("index", { title: "index side", message: "hei", heading: "velkommen" });
+	const connection = await createConnection();
+	const [results] = await connection.query("SELECT * FROM car ");
+
+	res.render("index", { cars: results });
+});
+
+app.use(express.static("public"));
+
+app.get("/about", (req, res) => {
+	res.render("about");
+});
+
+app.get("/bruker", (req, res) => {
+	console.log(req.query);
+	res.render("bruker", { names: ["per", "Ole", "Olesya", "Ådne"], fact: true, req: req.query });
 });
 
 const port = 3000;

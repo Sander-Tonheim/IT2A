@@ -12,5 +12,5 @@ app.get("/", async (req, res) => {
 
 const port = 3000;
 app.listen(port, () => {
-	console.log(`Denne serveren kjører på port ${port}`);
+	console.log(`Example app listening on port ${port}`);
 });

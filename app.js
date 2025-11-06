@@ -2,13 +2,15 @@ const express = require("express");
 const app = express();
 const port = 3000;
 const mysql = require("mysql2/promise");
-const { createConnection } = require("./database/database.js");
+const { createConnection } = require("./database/database");
+const { getCar } = require("./database/services");
 
 app.set("view engine", "ejs");
 
 app.get("/", async (req, res) => {
 	const connection = await createConnection();
-	const [results] = await connection.query("SELECT * FROM car ");
+
+	const results = await getCar(connection);
 
 	res.render("index", { cars: results });
 });

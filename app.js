@@ -9,7 +9,6 @@ app.set("view engine", "ejs");
 
 app.get("/", async (req, res) => {
 	const connection = await createConnection();
-
 	const results = await getCar(connection);
 
 	res.render("index", { cars: results });

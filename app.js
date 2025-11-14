@@ -18,7 +18,7 @@ app.set("view engine", "ejs");
 // serverer statiske filer.
 app.use(express.static("public"));
 
-// forteller hvor landingssiden er
+// Definerer hva som skal skje når vi får inn en forespørsel (req) med GET motode i http header
 app.get("/", async (req, res) => {
 	// åpner en ny mysql tilkobling
 	const connection = await createConnection();
@@ -28,13 +28,18 @@ app.get("/", async (req, res) => {
 	res.render("index", { cars: results });
 });
 
+// Definerer hva som skal skje når vi får inn en forespørsel (req) med GET motode i http header
 app.get("/about", (req, res) => {
+	// definerer hvordan vi skal svare på forsepørslen (req) fra klienten på denne ruten.
 	res.render("about");
 });
 
-app.get("/bruker", (req, res) => {
+// Definerer hva som skal skje når vi får inn en forespørsel (req) med GET motode i http header
+app.get("/brukere", (req, res) => {
 	console.log(req.query);
-	res.render("bruker", { names: ["per", "Ole", "Olesya", "Ådne"], fact: true, req: req.query });
+	// definerer hvordan vi skal svare på forsepørslen (req) fra klienten på denne ruten.
+	// sender ned et objekt med informasjon som vi kan bruke i malen.
+	res.render("users", { names: ["per", "Ole", "Olesya", "Ådne", "Christian"] });
 });
 
 app.listen(port, () => {

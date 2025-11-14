@@ -42,6 +42,11 @@ app.get("/brukere", (req, res) => {
 	res.render("users", { names: ["per", "Ole", "Olesya", "Ådne", "Christian"] });
 });
 
+app.get("/:userId", (req, res) => {
+	console.log(req);
+	res.send(req.params);
+});
+
 app.listen(port, () => {
 	console.log(`Example app listening on port ${port}`);
 });

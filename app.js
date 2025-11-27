@@ -9,9 +9,7 @@ const app = express();
 const port = 3000;
 // importerer funkjson som lager kobling til databasen.
 const { createConnection } = require("./database/database");
-
-// importerer funkjson som henter data fra databasen.
-const { getCar } = require("./database/services");
+const { getCar, insertIntoCarDatabase } = require("./database/services");
 
 // konfigurerer EJS som malmotor.
 app.set("view engine", "ejs");
@@ -34,7 +32,17 @@ app.get("/", async (req, res) => {
 	res.render("index", { cars: results });
 });
 
-// Definerer hva som skal skje når vi får inn en forespørsel (req) med GET motode i http header
+app.get("/input", (req, res) => {
+	res.render("input");
+});
+
+app.post("/input", async (req, res) => {
+	const connection = await createConnection();
+	const input = req.body;
+	await insertIntoCarDatabase(connection, input.brand, input.engine, input.wheels);
+	res.redirect("/input");
+});
+
 app.get("/about", (req, res) => {
 	// definerer hvordan vi skal svare på forsepørslen (req) fra klienten på denne ruten.
 	res.render("about");

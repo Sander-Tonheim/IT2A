@@ -50,14 +50,12 @@ app.get("/about", (req, res) => {
 
 // Definerer hva som skal skje når vi får inn en forespørsel (req) med GET motode i http header
 app.get("/brukere", (req, res) => {
-	console.log(req.query);
 	// definerer hvordan vi skal svare på forsepørslen (req) fra klienten på denne ruten.
 	// sender ned et objekt med informasjon som vi kan bruke i malen.
 	res.render("users", { names: ["per", "Ole", "Olesya", "Ådne", "Christian"] });
 });
 
 app.get("/:userId", (req, res) => {
-	console.log(req);
 	res.send(req.params);
 });
 

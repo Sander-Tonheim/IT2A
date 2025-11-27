@@ -18,6 +18,11 @@ app.set("view engine", "ejs");
 
 // serverer statiske filer.
 app.use(express.static("public"));
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded());
+
+// parse application/json
+app.use(bodyParser.json());
 
 // Definerer hva som skal skje når vi får inn en forespørsel (req) med GET motode i http header
 app.get("/", async (req, res) => {

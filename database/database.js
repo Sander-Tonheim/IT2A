@@ -5,7 +5,7 @@ async function createConnection() {
 		host: "localhost",
 		user: "root",
 		password: "Kappa123",
-		database: "cars",
+		database: "users",
 	});
 }
 module.exports = { createConnection };

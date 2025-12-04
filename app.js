@@ -32,8 +32,8 @@ app.get("/", async (req, res) => {
 	res.render("index", { cars: results });
 });
 
-app.get("/input", (req, res) => {
-	res.render("input");
+app.get("/registrer", (req, res) => {
+	res.render("registrerUser");
 });
 
 app.post("/input", async (req, res) => {
@@ -53,10 +53,6 @@ app.get("/brukere", (req, res) => {
 	// definerer hvordan vi skal svare på forsepørslen (req) fra klienten på denne ruten.
 	// sender ned et objekt med informasjon som vi kan bruke i malen.
 	res.render("users", { names: ["per", "Ole", "Olesya", "Ådne", "Christian"] });
-});
-
-app.get("/:userId", (req, res) => {
-	res.send(req.params);
 });
 
 app.listen(port, () => {

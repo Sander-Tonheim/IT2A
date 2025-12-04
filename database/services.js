@@ -1,12 +1,10 @@
-async function getCar(connection) {
-	const [results] = await connection.query("SELECT * FROM car");
-
+async function getUserData(connection, email) {
+	const [results] = await connection.query(`SELECT * FROM user WHERE email = "${email}"`);
 	return results;
 }
 
-async function insertIntoCarDatabase(connection, brand, engine, wheels) {
-	console.log(brand, engine, wheels);
-	const query = "INSERT INTO car (brand, engine, wheels) VALUES (?, ?, ?)";
-	return await connection.execute(query, [brand, engine, wheels]);
+async function insertIntoUserDatabase(connection, first_name, last_name, email, password) {
+	const query = "INSERT INTO user (first_name, last_name, email, password) VALUES (?, ?, ?, ?)";
+	return await connection.execute(query, [first_name, last_name, email, password]);
 }
-module.exports = { getCar, insertIntoCarDatabase };
+module.exports = { getUserData, insertIntoUserDatabase };

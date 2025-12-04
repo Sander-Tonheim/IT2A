@@ -9,7 +9,7 @@ const app = express();
 const port = 3000;
 // importerer funkjson som lager kobling til databasen.
 const { createConnection } = require("./database/database");
-const { getCar, insertIntoCarDatabase } = require("./database/services");
+const { getUserData, insertIntoUserDatabase } = require("./database/services");
 
 // konfigurerer EJS som malmotor.
 app.set("view engine", "ejs");
@@ -27,7 +27,7 @@ app.get("/", async (req, res) => {
 	// åpner en ny mysql tilkobling
 	const connection = await createConnection();
 	// henter data fra databasen.
-	const results = await getCar(connection);
+	const results = await getUserData(connection);
 	// definerer hvordan vi skal svare på forsepørslen (req) fra klienten på denne ruten.
 	res.render("index", { cars: results });
 });
@@ -36,11 +36,38 @@ app.get("/registrer", (req, res) => {
 	res.render("registrerUser");
 });
 
-app.post("/input", async (req, res) => {
+app.post("/registrer", async (req, res) => {
 	const connection = await createConnection();
 	const input = req.body;
-	await insertIntoCarDatabase(connection, input.brand, input.engine, input.wheels);
-	res.redirect("/input");
+	await insertIntoUserDatabase(connection, input.first_name, input.last_name, input.email, input.password);
+	res.redirect("/registrer");
+});
+
+app.get("/innlogging", (req, res) => {
+	res.render("signin");
+});
+
+app.post("/innlogging", async (req, res) => {
+	const connection = await createConnection();
+	const userData = req.body;
+	const dbUserInfo = await getUserData(connection, userData.email);
+	console.log(dbUserInfo[0].email);
+	console.log(dbUserInfo[0].password);
+
+	if (!dbUserInfo[0].email === "hello@hello.no" && !dbUserInfo[0].password === "Kappa123") {
+		res.redirect("/innlogging");
+	}
+
+	if (!dbUserInfo[0].email === "hello@hello.no" && !dbUserInfo[0].password === "Kappa123") {
+		res.redirect("/innlogging");
+	}
+	// const connection = await createConnection();
+	// const input = req.body;
+	// await insertIntoUserDatabase(connection, input.first_name, input.last_name, input.email, input.password);
+	res.redirect("/dashboard");
+});
+app.get("/dashboard", (req, res) => {
+	res.render("dashboard");
 });
 
 app.get("/about", (req, res) => {

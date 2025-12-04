@@ -5,29 +5,34 @@
 		<meta
 			name="viewport"
 			content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
+		<title>Registrer</title>
 	</head>
 	<body>
-		<h1>my form</h1>
+		<h1>Opprett bruker</h1>
 		<form method="post">
-			<label for="">Car form</label>
+			<label for="">Fornavn</label>
 			<input
 				type="text"
-				name="brand"
+				name="first_name"
 				required />
 			<br />
-			<label for="">Engine form</label>
+			<label for="">Etternavn</label>
 			<input
 				type="text"
-				name="engine"
+				name="last_name"
 				required />
 			<br />
-			<label for="">Wheels form</label>
+			<label for="">E-post</label>
 			<input
-				type="text"
-				name="wheels"
+				type="email"
+				name="email"
 				required />
 			<br />
+			<label for="">Passord</label>
+			<input
+				type="password"
+				name="password"
+				required />
 			<button type="submit">Submit</button>
 		</form>
 	</body>

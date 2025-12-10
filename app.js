@@ -53,20 +53,10 @@ app.post("/innlogging", async (req, res) => {
 	const connection = await createConnection();
 	const userData = req.body;
 	const dbUserInfo = await getUserData(connection, userData.email);
-	console.log(dbUserInfo[0].email);
-	console.log(dbUserInfo[0].password);
-
-	if (!dbUserInfo[0].email === "hello@hello.no" && !dbUserInfo[0].password === "Kappa123") {
-		res.redirect("/innlogging");
+	if (userData.password === dbUserInfo[0].password) {
+		return res.redirect("/dashboard");
 	}
-
-	if (!dbUserInfo[0].email === "hello@hello.no" && !dbUserInfo[0].password === "Kappa123") {
-		res.redirect("/innlogging");
-	}
-	// const connection = await createConnection();
-	// const input = req.body;
-	// await insertIntoUserDatabase(connection, input.first_name, input.last_name, input.email, input.password);
-	res.redirect("/dashboard");
+	res.redirect("/innlogging");
 });
 app.get("/dashboard", (req, res) => {
 	res.render("dashboard");

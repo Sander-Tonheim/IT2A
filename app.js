@@ -41,7 +41,10 @@ app.get("/registrer", (req, res) => {
 app.post("/registrer", async (req, res) => {
 	const connection = await createConnection();
 	const input = req.body;
-	await insertIntoUserDatabase(connection, input.first_name, input.last_name, input.email, input.password);
+	const hashedPassword = bcrypt.hashSync(input.password, saltRounds);
+	console.log(hashedPassword);
+
+	await insertIntoUserDatabase(connection, input.first_name, input.last_name, input.email, hashedPassword);
 	res.redirect("/registrer");
 });
 

@@ -55,9 +55,10 @@ app.get("/innlogging", (req, res) => {
 
 app.post("/innlogging", async (req, res) => {
 	const connection = await createConnection();
-	const userData = req.body;
-	const dbUserInfo = await getUserData(connection, userData.email);
-	if (userData.password === dbUserInfo[0].password) {
+	const userLoginDataFromForm = req.body;
+	const databaseUserInfo = await getUserData(connection, userLoginDataFromForm.email);
+	const encryptedPasswordFromDatabase = databaseUserInfo[0].password;
+	if (await compareUserAndDatabasePassword(userLoginDataFromForm.password, encryptedPasswordFromDatabase)) {
 		return res.redirect("/dashboard");
 	}
 	res.redirect("/innlogging");

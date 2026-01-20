@@ -9,4 +9,8 @@ async function insertIntoUserDatabase(connection, first_name, last_name, email, 
 	const query = "INSERT INTO user (first_name, last_name, email, password) VALUES (?, ?, ?, ?)";
 	return await connection.execute(query, [first_name, last_name, email, password]);
 }
-module.exports = { getUserData, insertIntoUserDatabase };
+
+async function compareUserAndDatabasePassword(passwordFromForm, encryptedPasswordFromDatabase) {
+	return await bcrypt.compare(passwordFromForm, encryptedPasswordFromDatabase);
+}
+module.exports = { getUserData, insertIntoUserDatabase, compareUserAndDatabasePassword };

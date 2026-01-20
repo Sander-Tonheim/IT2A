@@ -44,7 +44,7 @@ app.post("/registrer", async (req, res) => {
 	const hashedPassword = bcrypt.hashSync(input.password, saltRounds);
 	console.log(hashedPassword);
 
-	await insertIntoUserDatabase(connection, input.first_name, input.last_name, input.email, hashedPassword);
+	await insertIntoUserDatabase(connection, input.email, hashedPassword);
 	res.redirect("/registrer");
 });
 
@@ -56,10 +56,13 @@ app.post("/innlogging", async (req, res) => {
 	const connection = await createConnection();
 	const userData = req.body;
 	const dbUserInfo = await getUserData(connection, userData.email);
-	if (userData.password === dbUserInfo[0].password) {
-		return res.redirect("/dashboard");
+
+	console.log(await getUserData(connection, userData.email));
+
+	if (!bcrypt.compareSync(userData.password, dbUserInfo[0].password)) {
+		return res.redirect("/innlogging");
 	}
-	res.redirect("/innlogging");
+	return res.redirect("/dashboard");
 });
 app.get("/dashboard", (req, res) => {
 	res.render("dashboard");

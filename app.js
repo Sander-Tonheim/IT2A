@@ -5,15 +5,16 @@ const express = require("express");
 const mysql = require("mysql2/promise");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
-const saltRounds = 10;
+const session = require("express-session");
+// importerer funkjson som lager kobling til databasen.
+const { createConnection } = require("./database/database");
+const { getUserData, insertIntoUserDatabase, compareUserAndDatabasePassword } = require("./database/services");
 
 const app = express();
 
 // Definerer hvilken port som skal være åpen for å motta forespørsler (req) fra klient.
 const port = 3000;
-// importerer funkjson som lager kobling til databasen.
-const { createConnection } = require("./database/database");
-const { getUserData, insertIntoUserDatabase, compareUserAndDatabasePassword } = require("./database/services");
+const saltRounds = 10;
 
 // konfigurerer EJS som malmotor.
 app.set("view engine", "ejs");

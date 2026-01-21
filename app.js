@@ -26,6 +26,14 @@ app.use(bodyParser.urlencoded());
 
 // parse application/json
 app.use(bodyParser.json());
+// session setup
+app.use(
+	session({
+		secret: "hemmelig",
+		resave: false,
+		saveUninitialized: true,
+	}),
+);
 
 // Definerer hva som skal skje når vi får inn en forespørsel (req) med GET motode i http header
 app.get("/", async (req, res) => {

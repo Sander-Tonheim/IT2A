@@ -15,7 +15,6 @@ const port = 3000;
 // importerer funkjson som lager kobling til databasen.
 const { createConnection } = require("./database/database");
 const { getUserData, insertIntoUserDatabase } = require("./database/services");
-7;
 const { isAuthenticated } = require("./middleware/authMiddleware");
 
 // konfigurerer EJS som malmotor.

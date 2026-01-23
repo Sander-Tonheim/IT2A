@@ -23,7 +23,6 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded());
-
 // parse application/json
 app.use(bodyParser.json());
 // session setup
@@ -32,6 +31,7 @@ app.use(
 		secret: "hemmelig",
 		resave: false,
 		saveUninitialized: true,
+		cookie: {},
 	}),
 );
 
@@ -67,7 +67,11 @@ app.post("/innlogging", async (req, res) => {
 	const userLoginDataFromForm = req.body;
 	const databaseUserInfo = await getUserData(connection, userLoginDataFromForm.email);
 	const encryptedPasswordFromDatabase = databaseUserInfo[0].password;
+	// set session on login
 	if (await compareUserAndDatabasePassword(userLoginDataFromForm.password, encryptedPasswordFromDatabase)) {
+		req.session.user = { name: "hei" };
+		console.log(req.session.user);
+
 		return res.redirect("/dashboard");
 	}
 	res.redirect("/innlogging");

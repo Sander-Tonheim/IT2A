@@ -4,8 +4,8 @@ async function createConnection() {
 	return await mysql.createConnection({
 		host: "localhost",
 		user: "root",
-		password: "Kappa123",
-		database: "users",
+		password: "DB123",
+		database: "cars",
 	});
 }
 module.exports = { createConnection };

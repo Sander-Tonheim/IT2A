@@ -1,13 +1,13 @@
 const bcrypt = require("bcrypt");
 
 async function getUserData(connection, email) {
-	const [results] = await connection.query(`SELECT * FROM user WHERE email = "${email}"`);
+	const [results] = await connection.query(`SELECT * FROM login WHERE username = "${email}"`);
 	return results;
 }
 
-async function insertIntoUserDatabase(connection, first_name, last_name, email, password) {
-	const query = "INSERT INTO user (first_name, last_name, email, password) VALUES (?, ?, ?, ?)";
-	return await connection.execute(query, [first_name, last_name, email, password]);
+async function insertIntoUserDatabase(connection, email, password) {
+	const query = "INSERT INTO login (username, password) VALUES (?, ?)";
+	return await connection.execute(query, [email, password]);
 }
 
 async function compareUserAndDatabasePassword(passwordFromForm, encryptedPasswordFromDatabase) {

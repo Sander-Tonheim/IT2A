@@ -5,16 +5,18 @@ const express = require("express");
 const mysql = require("mysql2/promise");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
+const saltRounds = 10;
 const session = require("express-session");
-// importerer funkjson som lager kobling til databasen.
-const { createConnection } = require("./database/database");
-const { getUserData, insertIntoUserDatabase, compareUserAndDatabasePassword } = require("./database/services");
 
 const app = express();
 
 // Definerer hvilken port som skal være åpen for å motta forespørsler (req) fra klient.
 const port = 3000;
-const saltRounds = 10;
+// importerer funkjson som lager kobling til databasen.
+const { createConnection } = require("./database/database");
+const { getUserData, insertIntoUserDatabase } = require("./database/services");
+7;
+const { isAuthenticated } = require("./middleware/authMiddleware");
 
 // konfigurerer EJS som malmotor.
 app.set("view engine", "ejs");
@@ -23,6 +25,16 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded());
+
+app.use(
+	session({
+		secret: "keyboard cat",
+		resave: false,
+		saveUninitialized: true,
+		cookie: { secure: false, maxAge: 30000000000 },
+	}),
+);
+
 // parse application/json
 app.use(bodyParser.json());
 // session setup
@@ -41,6 +53,7 @@ app.get("/", async (req, res) => {
 	const connection = await createConnection();
 	// henter data fra databasen.
 	const results = await getUserData(connection);
+
 	// definerer hvordan vi skal svare på forsepørslen (req) fra klienten på denne ruten.
 	res.render("index", { cars: results });
 });
@@ -54,7 +67,7 @@ app.post("/registrer", async (req, res) => {
 	const input = req.body;
 	const hashedPassword = bcrypt.hashSync(input.password, saltRounds);
 
-	await insertIntoUserDatabase(connection, input.first_name, input.last_name, input.email, hashedPassword);
+	await insertIntoUserDatabase(connection, input.email, hashedPassword);
 	res.redirect("/registrer");
 });
 
@@ -64,19 +77,19 @@ app.get("/innlogging", (req, res) => {
 
 app.post("/innlogging", async (req, res) => {
 	const connection = await createConnection();
-	const userLoginDataFromForm = req.body;
-	const databaseUserInfo = await getUserData(connection, userLoginDataFromForm.email);
-	const encryptedPasswordFromDatabase = databaseUserInfo[0].password;
-	// set session on login
-	if (await compareUserAndDatabasePassword(userLoginDataFromForm.password, encryptedPasswordFromDatabase)) {
-		req.session.user = { name: "hei" };
-		console.log(req.session.user);
+	const userData = req.body;
+	const dbUserInfo = await getUserData(connection, userData.email);
 
-		return res.redirect("/dashboard");
+	if (!bcrypt.compareSync(userData.password, dbUserInfo[0].password)) {
+		return res.redirect("/innlogging");
 	}
-	res.redirect("/innlogging");
+
+	req.session.email = userData.email;
+
+	return res.redirect("/dashboard");
 });
-app.get("/dashboard", (req, res) => {
+
+app.get("/dashboard", isAuthenticated, (req, res) => {
 	res.render("dashboard");
 });
 

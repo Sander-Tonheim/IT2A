@@ -31,7 +31,7 @@ app.use(
 		resave: false,
 		saveUninitialized: true,
 		cookie: { secure: false, maxAge: 30000000000 },
-	}),
+	})
 );
 
 // parse application/json
@@ -43,7 +43,7 @@ app.use(
 		resave: false,
 		saveUninitialized: true,
 		cookie: {},
-	}),
+	})
 );
 
 // Definerer hva som skal skje når vi får inn en forespørsel (req) med GET motode i http header

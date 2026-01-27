@@ -95,6 +95,17 @@ app.get("/brukere", (req, res) => {
 	res.render("users", { names: ["per", "Ole", "Olesya", "Ådne", "Christian"] });
 });
 
+app.get("/logout", (req, res) => {
+	req.session.destroy((err) => {
+		if (err) {
+			console.error(err);
+			return res.sendStatus(500);
+		}
+
+		res.clearCookie("connect.sid");
+		res.redirect("/");
+	});
+});
 app.listen(port, () => {
 	console.log(`Example app listening on port ${port}`);
 });

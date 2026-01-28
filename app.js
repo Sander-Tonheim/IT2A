@@ -98,16 +98,12 @@ app.get("/brukere", (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
-	req.session.destroy((err) => {
-		if (err) {
-			console.error(err);
-			return res.sendStatus(500);
-		}
-
+	req.session.destroy(() => {
 		res.clearCookie("connect.sid");
 		res.redirect("/");
 	});
 });
+
 app.listen(port, () => {
 	console.log(`Example app listening on port ${port}`);
 });

@@ -98,8 +98,11 @@ app.get("/brukere", (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
+	// Kode for å slette sessoin når brukeren logger ut. Kjører callback funsjonen når den er ferdig med destroy metoden.
 	req.session.destroy(() => {
+		// Fjerner cookies i nettleseren med navn "connect.sid".
 		res.clearCookie("connect.sid");
+		// Sender brukeren til forsiden.
 		res.redirect("/");
 	});
 });

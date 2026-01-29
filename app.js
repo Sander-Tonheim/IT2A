@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded());
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: { secure: false, maxAge: 30000000000 }
 }))
 
@@ -67,6 +67,10 @@ app.post("/innlogging", async (req, res) => {
 	const userData = req.body;
 	const dbUserInfo = await getUserData(connection, userData.email);
 
+	if (dbUserInfo[0] === undefined) {
+		return res.redirect("/innlogging");
+	}
+
 	if (!bcrypt.compareSync(userData.password, dbUserInfo[0].password)) {
 		return res.redirect("/innlogging");
 	}
@@ -91,6 +95,11 @@ app.get("/brukere", (req, res) => {
 	// sender ned et objekt med informasjon som vi kan bruke i malen.
 	res.render("users", { names: ["per", "Ole", "Olesya", "Ådne", "Christian"] });
 });
+
+app.get("/logout", (req,res) => {
+	req.session.destroy();
+	res.redirect("/");
+})
 
 app.listen(port, () => {
 	console.log(`Example app listening on port ${port}`);

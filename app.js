@@ -84,7 +84,7 @@ app.post("/innlogging", async (req, res) => {
 app.get("/dashboard", isAuthenticated, async (req, res) => {
 	// destruktur for key value pair i req.session
 	const { userId, email } = req.session;
-
+	// sender informasjon fra session til dashboard side
 	res.render("dashboard", { id: userId, email: email });
 });
 

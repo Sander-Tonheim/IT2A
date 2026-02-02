@@ -75,6 +75,7 @@ app.post("/innlogging", async (req, res) => {
 	}
 	// legge data i session etter at bruker er logget inn
 	req.session.email = userData.email;
+	req.session.userId = dbUserInfo[0].id;
 
 	// sender bruker til dashboard siden dersom passordet stemmer
 	return res.redirect("/dashboard");

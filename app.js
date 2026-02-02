@@ -82,9 +82,9 @@ app.post("/innlogging", async (req, res) => {
 });
 
 app.get("/dashboard", isAuthenticated, async (req, res) => {
-	const connection = await createConnection();
-	const [{ id, email }] = await getUserData(connection, req.session.email);
-	res.render("dashboard", { id: id, email: email });
+	const { userId, email } = req.session;
+
+	res.render("dashboard", { id: userId, email: email });
 });
 
 app.get("/about", (req, res) => {

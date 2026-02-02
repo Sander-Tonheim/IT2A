@@ -67,14 +67,15 @@ app.get("/innlogging", (req, res) => {
 
 app.post("/innlogging", async (req, res) => {
 	const connection = await createConnection();
-	const userData = req.body;
-	const dbUserInfo = await getUserData(connection, userData.email);
+	const { email, password } = req.body;
+
+	const dbUserInfo = await getUserData(connection, email);
 	// sjekker "hvis ikke" passordet fra form stemmer med passordet i databasen, send bruker til /innlogging
-	if (!bcrypt.compareSync(userData.password, dbUserInfo[0].password)) {
+	if (!bcrypt.compareSync(password, dbUserInfo[0].password)) {
 		return res.redirect("/innlogging");
 	}
 	// legge data i session etter at bruker er logget inn
-	req.session.email = userData.email;
+	req.session.email = email;
 	req.session.userId = dbUserInfo[0].id;
 
 	// sender bruker til dashboard siden dersom passordet stemmer

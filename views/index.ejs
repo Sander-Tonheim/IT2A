@@ -11,23 +11,10 @@
 		<title>Document</title>
 	</head>
 	<body>
-		<a href="/bruker">Til brukere!</a> <a href="/registrer">Til registrering!</a><a href="/innlogging">Til innlogging!</a>
-
-		<h1>Hjemme</h1>
-		<div class="car-card">
-			<% cars.forEach(car => { %>
-			<div>
-				<ul>
-					<li><%= car.brand %></li>
-					<li><%= car.engine %></li>
-					<li><%= car.wheels %></li>
-				</ul>
-				<img
-					src="/images/car.jpg"
-					alt="car"
-					class="car-image" />
-			</div>
-			<% }) %>
-		</div>
+		<%- include('partials/navbar') %>
+		<main class="main">
+			<h1>Hjemme</h1>
+		</main>
+		<%- include('partials/footer') %>
 	</body>
 </html>

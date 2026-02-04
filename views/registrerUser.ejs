@@ -12,20 +12,23 @@
 	</head>
 	<body>
 		<%- include('partials/navbar') %>
-		<h1>Opprett bruker</h1>
-		<form method="post">
-			<label for="">E-post</label>
-			<input
-				type="email"
-				name="email"
-				required />
-			<br />
-			<label for="">Passord</label>
-			<input
-				type="password"
-				name="password"
-				required />
-			<button type="submit">Submit</button>
-		</form>
+		<main>
+			<h1>Opprett bruker</h1>
+			<form method="post">
+				<label for="">E-post</label>
+				<input
+					type="email"
+					name="email"
+					required />
+				<br />
+				<label for="">Passord</label>
+				<input
+					type="password"
+					name="password"
+					required />
+				<button type="submit">Submit</button>
+			</form>
+		</main>
+		<%- include('partials/footer') %>
 	</body>
 </html>

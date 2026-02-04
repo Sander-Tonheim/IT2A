@@ -12,8 +12,11 @@
 	</head>
 	<body>
 		<%- include('partials/navbar') %>
-		<h1>You logged in successfully</h1>
-		<p>Velkommen <%= email %></p>
-		<p>Din id er <%= id %></p>
+		<main>
+			<h1>You logged in successfully</h1>
+			<p>Velkommen <%= email %></p>
+			<p>Din id er <%= id %></p>
+		</main>
+		<%- include('partials/footer') %>
 	</body>
 </html>

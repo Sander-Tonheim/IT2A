@@ -1,3 +1,4 @@
+/* grunnleggende oppsett for side med navbar og footer */
 html,
 body {
 	height: 100%;
@@ -8,10 +9,13 @@ body {
 	flex-direction: column;
 }
 
-.main {
+main {
 	flex: 1;
 	padding: 0 1rem;
 }
+/* ------------------------------------------------ */
+
+/* Components */
 
 nav {
 	background-color: pink;
@@ -32,27 +36,7 @@ footer {
 	justify-content: center;
 	background-color: pink;
 }
-.car-card {
-	display: grid;
-	/* margin: 0 2rem; */
-	grid-template-columns: 1fr 1fr;
-	max-width: 40rem;
-	margin: 0 auto;
-}
-
-.car-card div {
-	display: flex;
-	align-items: center;
-	justify-content: space-around;
-}
-.car-card ul {
-	display: flex;
-	flex-direction: column;
-}
-
-.car-image {
-	width: 8rem;
-}
+/* ------------------------------------------------ */
 
 @media screen and (max-width: 768px) {
 	.car-card {

@@ -59,6 +59,8 @@ form div {
 	gap: 0.5rem;
 }
 
+/* --------------------- Button glow --------------------- */
+
 .glow-on-hover a {
 	border: none;
 }
@@ -131,6 +133,10 @@ form div {
 	left: 0;
 	top: 0;
 	border-radius: 10px;
+}
+
+.button {
+	background: none;
 }
 
 @keyframes glowing {

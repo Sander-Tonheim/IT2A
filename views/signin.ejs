@@ -15,17 +15,16 @@
 		<main>
 			<h1>Logg inn</h1>
 			<form method="post">
-				<label for="">E-post</label>
-				<input
-					type="email"
-					name="email"
-					required />
-				<label for="">Passord</label>
-				<input
-					type="password"
-					name="password"
-					required />
-				<button type="submit">Submit</button>
+				<%- include('partials/formField', {
+					labelName:'E-post',
+					type:"email",
+					name:"email",
+				}) %>
+				<%- include('partials/formField', {
+					labelName:'Passord',
+					type:"password",
+					name:"password",
+				}) %>
 			</form>
 		</main>
 		<%- include('partials/footer') %>

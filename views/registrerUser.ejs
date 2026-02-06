@@ -15,21 +15,24 @@
 		<main>
 			<h1>Opprett bruker</h1>
 			<form method="post">
-				<div>
-					<label for="">E-post</label>
-					<input
-						type="email"
-						name="email"
-						required />
-				</div>
-				<div>
-					<label for="">Passord</label>
-					<input
-						type="password"
-						name="password"
-						required />
-				</div>
-				<button type="submit">Submit</button>
+				<%- include('partials/formField', {
+					labelName:'E-post',
+					type:"email",
+					name:"email",
+					placeholder:"E-post"
+				}) %>
+				<%- include('partials/formField', {
+					labelName:'Passord',
+					type:"password",
+					name:"password",
+					placeholder:'passord'
+				}) %>
+
+				<button
+					type="submit"
+					class="button">
+					Submit
+				</button>
 			</form>
 		</main>
 		<%- include('partials/footer') %>

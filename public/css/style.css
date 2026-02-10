@@ -17,6 +17,31 @@ main {
 	flex: 1;
 	padding: 0 1rem;
 }
+
+.rainbow-text {
+	animation: rainbow-text 3s ease-in-out infinite alternate;
+	background: -webkit-radial-gradient(circle, #7182ff 0, #3cff52 100%);
+	background: radial-gradient(circle, #7182ff 0, #3cff52 100%);
+	background-clip: text;
+	background-size: 200%;
+	color: transparent;
+	height: 4rem;
+}
+
+@keyframes rainbow-text {
+	0% {
+		background-position: 0 50%;
+	}
+	15% {
+		background-position: 0 50%;
+	}
+	85% {
+		background-position: 100% 100%;
+	}
+	100% {
+		background-position: 100% 100%;
+	}
+}
 /* ------------------------------------------------ */
 
 /* ------------------ Components ------------------ */

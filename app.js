@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const session = require("express-session");
+const expressLayouts = require("express-ejs-layouts");
 
 const app = express();
 

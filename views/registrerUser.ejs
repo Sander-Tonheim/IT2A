@@ -1,40 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<link
-			rel="stylesheet"
-			href="/css/style.css" />
-		<meta charset="UTF-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1.0" />
-		<title>Registrer</title>
-	</head>
-	<body>
-		<%- include('partials/navbar') %>
-		<main>
-			<h1>Opprett bruker</h1>
-			<form method="post">
-				<%- include('partials/formField', {
-					labelName:'E-post',
-					type:"email",
-					name:"email",
-					placeholder:"E-post"
-				}) %>
-				<%- include('partials/formField', {
-					labelName:'Passord',
-					type:"password",
-					name:"password",
-					placeholder:'passord'
-				}) %>
 
-				<button
-					type="submit"
-					class="button">
-					Submit
-				</button>
-			</form>
-		</main>
-		<%- include('partials/footer') %>
-	</body>
-</html>
+<h1>Opprett bruker</h1>
+<form method="post">
+	<%- include('partials/formField', {
+		labelName:'E-post',
+		type:"email",
+		name:"email",
+		placeholder:"E-post"
+	}) %>
+	<%- include('partials/formField', {
+		labelName:'Passord',
+		type:"password",
+		name:"password",
+		placeholder:'passord'
+	}) %>
+
+	<button
+		type="submit"
+		class="button">
+		Submit
+	</button>
+</form>
+	

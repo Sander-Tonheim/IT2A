@@ -38,6 +38,10 @@ app.use(
 // parse application/json
 app.use(bodyParser.json());
 
+// Use express-ejs-layouts middleware
+// This MUST be set before your route definitions
+app.use(expressLayouts);
+
 // Definerer hva som skal skje når vi får inn en forespørsel (req) med GET motode i http header
 app.get("/", async (req, res) => {
 	// åpner en ny mysql tilkobling

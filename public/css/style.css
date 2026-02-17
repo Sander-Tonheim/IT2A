@@ -52,11 +52,11 @@ main {
 	align-items: center;
 	gap: 2rem;
 	justify-content: center;
-} */
+}
 
-/* .logo {
-	height: auto;
-} */
+.logo {
+	height: 2rem;
+}
 
 .hero-image {
 	width: 50rem;

@@ -3,6 +3,9 @@ const express = require("express");
 const mysql = require("mysql2/promise");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
+const saltRounds = 10;
+const session = require('express-session');
+
 
 const app = express();
 
@@ -10,7 +13,8 @@ const app = express();
 const port = 3000;
 // importerer funkjson som lager kobling til databasen.
 const { createConnection } = require("./database/database");
-const { getUserData, insertIntoUserDatabase } = require("./database/services");
+const { getUserData, insertIntoUserDatabase } = require("./database/services");7
+const { isAuthenticated } = require("./middleware/authMiddleware");
 
 // konfigurerer EJS som malmotor.
 app.set("view engine", "ejs");
@@ -19,6 +23,13 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded());
+
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false, maxAge: 30000000000 }
+}))
 
 // parse application/json
 app.use(bodyParser.json());
@@ -29,6 +40,7 @@ app.get("/", async (req, res) => {
 	const connection = await createConnection();
 	// henter data fra databasen.
 	const results = await getUserData(connection);
+
 	// definerer hvordan vi skal svare på forsepørslen (req) fra klienten på denne ruten.
 	res.render("index", { cars: results });
 });
@@ -40,10 +52,9 @@ app.get("/registrer", (req, res) => {
 app.post("/registrer", async (req, res) => {
 	const connection = await createConnection();
 	const input = req.body;
-	const hashedPassword = bcrypt.hashSync(input.password, 10);
-	console.log(hashedPassword);
-
-	await insertIntoUserDatabase(connection, input.first_name, input.last_name, input.email, hashedPassword);
+	const hashedPassword = bcrypt.hashSync(input.password, saltRounds);
+	
+	await insertIntoUserDatabase(connection, input.email, hashedPassword);
 	res.redirect("/registrer");
 });
 
@@ -55,13 +66,22 @@ app.post("/innlogging", async (req, res) => {
 	const connection = await createConnection();
 	const userData = req.body;
 	const dbUserInfo = await getUserData(connection, userData.email);
-	if (userData.password === dbUserInfo[0].password) {
-		return res.redirect("/dashboard");
+
+	if (dbUserInfo[0] === undefined) {
+		return res.redirect("/innlogging");
 	}
-	res.redirect("/innlogging");
+
+	if (!bcrypt.compareSync(userData.password, dbUserInfo[0].password)) {
+		return res.redirect("/innlogging");
+	}
+
+	req.session.email = userData.email;
+
+	return res.redirect("/dashboard");
 });
-app.get("/dashboard", (req, res) => {
-	res.render("dashboard");
+
+app.get("/dashboard", isAuthenticated, (req, res) => {
+	res.render("dashboard") ;
 });
 
 app.get("/about", (req, res) => {
@@ -75,6 +95,11 @@ app.get("/brukere", (req, res) => {
 	// sender ned et objekt med informasjon som vi kan bruke i malen.
 	res.render("users", { names: ["per", "Ole", "Olesya", "Ådne", "Christian"] });
 });
+
+app.get("/logout", (req,res) => {
+	req.session.destroy();
+	res.redirect("/");
+})
 
 app.listen(port, () => {
 	console.log(`Example app listening on port ${port}`);

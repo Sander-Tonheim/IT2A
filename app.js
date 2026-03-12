@@ -13,7 +13,7 @@ const app = express();
 const port = 3000;
 // importerer funkjson som lager kobling til databasen.
 const { createConnection } = require("./database/database");
-const { getUserData, insertIntoUserDatabase } = require("./database/services");7
+const { getUserData, insertIntoUserDatabase, insertBistandIntoDatabase } = require("./database/services");7
 const { isAuthenticated } = require("./middleware/authMiddleware");
 
 // konfigurerer EJS som malmotor.
@@ -83,6 +83,18 @@ app.post("/innlogging", async (req, res) => {
 app.get("/dashboard", isAuthenticated, (req, res) => {
 	res.render("dashboard") ;
 });
+
+app.get("/bistand", isAuthenticated, (req, res) => {
+	res.render("bistand")
+})
+
+app.post("/bistand", isAuthenticated, async (req, res) => {
+	const connection = await createConnection();
+	const input = req.body;
+	console.log(input)
+	insertBistandIntoDatabase(connection, input.text)
+	res.render("bistand")
+})
 
 app.get("/about", (req, res) => {
 	// definerer hvordan vi skal svare på forsepørslen (req) fra klienten på denne ruten.

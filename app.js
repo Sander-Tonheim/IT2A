@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const session = require('express-session');
+const expressLayouts = require('express-ejs-layouts');
 
 
 const app = express();
@@ -13,16 +14,19 @@ const app = express();
 const port = 3000;
 // importerer funkjson som lager kobling til databasen.
 const { createConnection } = require("./database/database");
-const { getUserData, insertIntoUserDatabase } = require("./database/services");7
+const { getUserData, insertIntoUserDatabase, insertIntoBistandDatabase, getUserText } = require("./database/services");7
 const { isAuthenticated } = require("./middleware/authMiddleware");
 
 // konfigurerer EJS som malmotor.
 app.set("view engine", "ejs");
-
 // serverer statiske filer.
 app.use(express.static("public"));
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded());
+
+app.use(expressLayouts);
+
+app.set('layout', 'partials/master');
 
 app.use(session({
   secret: 'keyboard cat',
@@ -83,6 +87,22 @@ app.post("/innlogging", async (req, res) => {
 app.get("/dashboard", isAuthenticated, (req, res) => {
 	res.render("dashboard") ;
 });
+
+app.get("/dashboard/bistand", isAuthenticated, async (req, res) => {
+	const connection = await createConnection();
+	const email = req.session.email;
+	const userText = await getUserText(connection, email);
+	res.render("bistand", {text: userText.text});
+})
+
+app.post("/dashboard/bistand", isAuthenticated, async (req, res) => {
+	const connection = await createConnection();
+	const email = req.session.email;
+	const text = req.body.text;
+
+	insertIntoBistandDatabase(connection, email, text);
+	res.redirect("/dashboard/bistand");
+})
 
 app.get("/about", (req, res) => {
 	// definerer hvordan vi skal svare på forsepørslen (req) fra klienten på denne ruten.

@@ -4,9 +4,8 @@ const mysql = require("mysql2/promise");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-const session = require('express-session');
-const expressLayouts = require('express-ejs-layouts');
-
+const session = require("express-session");
+const expressLayouts = require("express-ejs-layouts");
 
 const app = express();
 
@@ -14,7 +13,12 @@ const app = express();
 const port = 3000;
 // importerer funkjson som lager kobling til databasen.
 const { createConnection } = require("./database/database");
-const { getUserData, insertIntoUserDatabase, insertIntoBistandDatabase, getUserText } = require("./database/services");7
+const {
+	getUserData,
+	insertIntoUserDatabase,
+	insertIntoBistandDatabase,
+	getUserText,
+} = require("./database/services");
 const { isAuthenticated } = require("./middleware/authMiddleware");
 
 // konfigurerer EJS som malmotor.
@@ -26,14 +30,16 @@ app.use(bodyParser.urlencoded());
 
 app.use(expressLayouts);
 
-app.set('layout', 'partials/master');
+app.set("layout", "partials/master");
 
-app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: false, maxAge: 30000000000 }
-}))
+app.use(
+	session({
+		secret: "keyboard cat",
+		resave: false,
+		saveUninitialized: false,
+		cookie: { secure: false, maxAge: 30000000000 },
+	}),
+);
 
 // parse application/json
 app.use(bodyParser.json());
@@ -57,7 +63,7 @@ app.post("/registrer", async (req, res) => {
 	const connection = await createConnection();
 	const input = req.body;
 	const hashedPassword = bcrypt.hashSync(input.password, saltRounds);
-	
+
 	await insertIntoUserDatabase(connection, input.email, hashedPassword);
 	res.redirect("/registrer");
 });
@@ -85,15 +91,15 @@ app.post("/innlogging", async (req, res) => {
 });
 
 app.get("/dashboard", isAuthenticated, (req, res) => {
-	res.render("dashboard") ;
+	res.render("dashboard");
 });
 
 app.get("/dashboard/bistand", isAuthenticated, async (req, res) => {
 	const connection = await createConnection();
 	const email = req.session.email;
 	const userText = await getUserText(connection, email);
-	res.render("bistand", {text: userText.text});
-})
+	res.render("bistand", { text: userText.text });
+});
 
 app.post("/dashboard/bistand", isAuthenticated, async (req, res) => {
 	const connection = await createConnection();
@@ -102,7 +108,7 @@ app.post("/dashboard/bistand", isAuthenticated, async (req, res) => {
 
 	insertIntoBistandDatabase(connection, email, text);
 	res.redirect("/dashboard/bistand");
-})
+});
 
 app.get("/about", (req, res) => {
 	// definerer hvordan vi skal svare på forsepørslen (req) fra klienten på denne ruten.
@@ -116,10 +122,10 @@ app.get("/brukere", (req, res) => {
 	res.render("users", { names: ["per", "Ole", "Olesya", "Ådne", "Christian"] });
 });
 
-app.get("/logout", (req,res) => {
+app.get("/logout", (req, res) => {
 	req.session.destroy();
 	res.redirect("/");
-})
+});
 
 app.listen(port, () => {
 	console.log(`Example app listening on port ${port}`);

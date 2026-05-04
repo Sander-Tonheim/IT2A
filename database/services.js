@@ -3,13 +3,18 @@ async function getUserData(connection, email) {
 	return results;
 }
 
-async function insertIntoUserDatabase(connection, email, password) {
-	const query = "INSERT INTO login (username, password) VALUES (?, ?)";
-	return await connection.execute(query, [email, password]);
+async function insertIntoUserDatabase(connection, email, password, userLevel) {
+	const query = "INSERT INTO login (username, password, user_level) VALUES (?, ?, ?)";
+	return await connection.execute(query, [email, password, userLevel]);	
 }
 
-async function insertBistandIntoDatabase(connection, text) {
-	const query = "INSERT INTO bistand (text) VALUES (?)";
-	return await connection.execute(query, [text]);
+async function insertBistandIntoDatabase(connection, email, text) {
+	const query = "INSERT INTO bistand (username, text) VALUES (?, ?)";
+	return await connection.execute(query, [email, text]);
 }
-module.exports = { getUserData, insertIntoUserDatabase, insertBistandIntoDatabase };
+
+async function updateUserlevelToOne(connection, email, userLevel) {
+	const query = "UPDATE login SET user_level = ? where username = ?";
+	return await connection.execute(query, [userLevel, email]);
+}
+module.exports = { getUserData, insertIntoUserDatabase, insertBistandIntoDatabase, updateUserlevelToOne };

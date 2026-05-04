@@ -14,7 +14,7 @@ const app = express();
 const port = 3000;
 // importerer funkjson som lager kobling til databasen.
 const { createConnection } = require("./database/database");
-const { getUserData, insertIntoUserDatabase, insertBistandIntoDatabase } = require("./database/services");7
+const { getUserData, insertIntoUserDatabase, insertBistandIntoDatabase, updateUserlevelToOne } = require("./database/services");7
 const { isAuthenticated } = require("./middleware/authMiddleware");
 
 // konfigurerer EJS som malmotor.
@@ -57,7 +57,9 @@ app.post("/registrer", async (req, res) => {
 	const input = req.body;
 	const hashedPassword = bcrypt.hashSync(input.password, saltRounds);
 	
-	await insertIntoUserDatabase(connection, input.email, hashedPassword);
+	const defaultUserLevel = 1;
+	
+	await insertIntoUserDatabase(connection, input.email, hashedPassword, defaultUserLevel);
 	res.redirect("/registrer");
 });
 
@@ -79,12 +81,14 @@ app.post("/innlogging", async (req, res) => {
 	}
 
 	req.session.email = userData.email;
+	req.session.userlevel = dbUserInfo[0].user_level;
 
 	return res.redirect("/dashboard");
 });
 
 app.get("/dashboard", isAuthenticated, (req, res) => {
-	res.render("dashboard") ;
+	const userLevel = req.session.userlevel;
+	res.render("dashboard", {userLevel: `${userLevel}`});
 });
 
 app.get("/bistand", isAuthenticated, (req, res) => {
@@ -94,9 +98,13 @@ app.get("/bistand", isAuthenticated, (req, res) => {
 app.post("/bistand", isAuthenticated, async (req, res) => {
 	const connection = await createConnection();
 	const input = req.body;
-	console.log(input)
-	insertBistandIntoDatabase(connection, input.text)
-	res.render("bistand")
+	if (req.session.userLevel === 2) {
+		res.redirect("dashboard");
+	}
+	const newUserlevel = 2;
+	updateUserlevelToOne(connection, req.session.email, newUserlevel);
+	insertBistandIntoDatabase(connection, req.session.email, input.text)
+	res.redirect("bistand")
 })
 
 app.get("/about", (req, res) => {

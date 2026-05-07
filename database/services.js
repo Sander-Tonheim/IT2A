@@ -3,12 +3,17 @@ async function getUserData(connection, email) {
 	return results;
 }
 
-async function insertIntoUserDatabase(connection, email, password) {
-	const query = "INSERT INTO login (username, password) VALUES (?, ?)";
-	return await connection.execute(query, [email, password]);
+async function insertIntoUserDatabase(connection, email, password, userLevel) {
+	const query = "INSERT INTO login (username, password, user_level) VALUES (?, ?)";
+	return await connection.execute(query, [email, password, userLevel]);
 }
 
-async function insertIntoBistandDatabase(connection, email, text) {
+async function insertIntoBistandDatabase(connection, email, text, userLevel) {
+	if (userLevel == 2) {
+		return false;
+	}
+	const userLevelQuery = "UPDATE login SET user_level = 2 WHERE username = ?";
+	await connection.execute(userLevelQuery, [email])
 	const query = "INSERT INTO bistand (username, text) VALUES (?, ?)";
 	return await connection.execute(query, [email, text]);
 }

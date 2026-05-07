@@ -57,8 +57,10 @@ app.post("/registrer", async (req, res) => {
 	const connection = await createConnection();
 	const input = req.body;
 	const hashedPassword = bcrypt.hashSync(input.password, saltRounds);
+
+	const defaultUserLevel = 1;
 	
-	await insertIntoUserDatabase(connection, input.email, hashedPassword);
+	await insertIntoUserDatabase(connection, input.email, hashedPassword, defaultUserLevel);
 	res.redirect("/registrer");
 });
 
@@ -80,12 +82,13 @@ app.post("/innlogging", async (req, res) => {
 	}
 
 	req.session.email = userData.email;
+	req.session.userLevel = dbUserInfo[0].user_level;
 
 	return res.redirect("/dashboard");
 });
 
 app.get("/dashboard", isAuthenticated, (req, res) => {
-	res.render("dashboard") ;
+	res.render("dashboard", {userLevel: req.session.userLevel}) ;
 });
 
 app.get("/dashboard/bistand", isAuthenticated, async (req, res) => {
@@ -99,8 +102,9 @@ app.post("/dashboard/bistand", isAuthenticated, async (req, res) => {
 	const connection = await createConnection();
 	const email = req.session.email;
 	const text = req.body.text;
+	const userLevel = req.session.userLevel;
 
-	insertIntoBistandDatabase(connection, email, text);
+	insertIntoBistandDatabase(connection, email, text, userLevel);
 	res.redirect("/dashboard/bistand");
 })
 

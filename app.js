@@ -94,7 +94,8 @@ app.post("/innlogging", async (req, res) => {
 });
 
 app.get("/dashboard", isAuthenticated, (req, res) => {
-	res.render("dashboard") ;
+	const userLevel = req.session.userLevel;
+	res.render("dashboard", {userLevel: userLevel}) ;
 });
 
 app.get("/dashboard/bistand", isAuthenticated, async (req, res) => {

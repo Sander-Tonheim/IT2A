@@ -38,7 +38,7 @@ app.use(
 		resave: false,
 		saveUninitialized: false,
 		cookie: { secure: false, maxAge: 30000000000 },
-	}),
+	})
 );
 
 // parse application/json
@@ -65,8 +65,13 @@ app.post("/registrer", async (req, res) => {
 	const hashedPassword = bcrypt.hashSync(input.password, saltRounds);
 
 	const defaultUserLevel = 1;
-	
-	await insertIntoUserDatabase(connection, input.email, hashedPassword, defaultUserLevel);
+
+	await insertIntoUserDatabase(
+		connection,
+		input.email,
+		hashedPassword,
+		defaultUserLevel
+	);
 	res.redirect("/registrer");
 });
 
@@ -95,7 +100,7 @@ app.post("/innlogging", async (req, res) => {
 
 app.get("/dashboard", isAuthenticated, (req, res) => {
 	const userLevel = req.session.userLevel;
-	res.render("dashboard", {userLevel: userLevel}) ;
+	res.render("dashboard", { userLevel: userLevel });
 });
 
 app.get("/dashboard/bistand", isAuthenticated, async (req, res) => {

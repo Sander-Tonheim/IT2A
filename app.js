@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const session = require("express-session");
 const expressLayouts = require("express-ejs-layouts");
+const nodeMailer = require("nodemailer");
 
 const app = express();
 
@@ -46,13 +47,7 @@ app.use(bodyParser.json());
 
 // Definerer hva som skal skje når vi får inn en forespørsel (req) med GET motode i http header
 app.get("/", async (req, res) => {
-	// åpner en ny mysql tilkobling
-	const connection = await createConnection();
-	// henter data fra databasen.
-	const results = await getUserData(connection);
-
-	// definerer hvordan vi skal svare på forsepørslen (req) fra klienten på denne ruten.
-	res.render("index", { cars: results });
+	res.render("index");
 });
 
 app.get("/registrer", (req, res) => {
@@ -117,6 +112,23 @@ app.post("/dashboard/bistand", isAuthenticated, async (req, res) => {
 	const userLevel = req.session.userLevel;
 
 	insertIntoBistandDatabase(connection, email, text, userLevel);
+
+	const transporter = nodeMailer.createTransport({
+		host: "localhost",
+		port: 1025,
+		secure: false,
+	});
+	await transporter.sendMail({
+		from: "team@boretslaget.no",
+		to: `${email}`,
+		subject: "Takk for din hevndelse",
+		secure: false,
+
+		text: "Takk for din hendvenelse, vi vil svare deg så fort som mulig",
+		headers: {
+			"Content-Type": "text/plain; charset=UTF-8",
+		},
+	});
 	res.redirect("/dashboard/bistand");
 });
 
